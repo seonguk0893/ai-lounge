@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>음성 AI 서비스</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/common.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/voice.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/fullscreen.css') }}"
+    />
+  </head>
+
+  <body>
+    {% include 'nav.html' %}
+
+    <div id="screen-voice" class="screen active">
+      <div class="voice-page">
+        <div class="voice-title">
+          <div class="line1">시민과 함께하는</div>
+
+          <div class="line2">AI 스마트시티</div>
+        </div>
+
+        <div class="voice-sub">
+          행정·복지·교통·안전 정보를 AI 음성으로 쉽고 빠르게 안내합니다.<br />
+          아래 버튼을 클릭하면 음성으로 대화를 시작합니다.
+        </div>
+
+        <button class="btn-voice-image" onclick="openVoice()">
+          <img
+            src="{{ url_for('static', filename='images/voice-btn.png') }}"
+            class="voice-btn-img"
+            alt="음성 대화"
+          />
+
+          <span class="voice-btn-text"> 음성으로 대화 시작하기 </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="voice-modal" id="voiceModal">
+      <div class="voice-inner">
+        <div class="voice-orb">🎙️</div>
+
+        <div class="voice-title">음성 안내 시작</div>
+
+        <div class="voice-sub">
+          무엇이든 말씀해 주세요.<br />
+          AI가 즉시 안내해 드립니다.
+        </div>
+
+        <div class="voice-transcript" id="voiceTranscript">
+          듣고 있습니다...
+        </div>
+
+        <button class="btn-close-voice" onclick="closeVoice()">닫기</button>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  </body>
+</html>

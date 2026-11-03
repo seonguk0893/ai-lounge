@@ -1,0 +1,827 @@
+/* ============================================================
+   틀린 그림 찾기
+   반응형 CSS
+   - Canvas 내부 좌표: 500 × 500 고정
+   - 화면 표시 크기만 반응형으로 변경
+   - PC / 태블릿 / 모바일 대응
+   ============================================================ */
+
+/* ============================================================
+   1. 폰트
+   ============================================================ */
+
+@font-face {
+  font-family: "MaplestoryOTFBold";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ============================================================
+   2. 기본 초기화
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  text-align: center;
+  background-color: #fff6f0;
+  font-family: "MaplestoryOTFBold", sans-serif;
+
+  /* 화면을 넘어가는 가로 스크롤 방지 */
+  overflow-x: hidden;
+
+  /* 모바일 브라우저 터치 동작 최적화 */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   3. 숨김
+   ============================================================ */
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================================================
+   4. HOME 버튼
+   ============================================================ */
+
+.home-button {
+  position: fixed;
+
+  top: clamp(14px, 2.5vh, 32px);
+  right: clamp(14px, 2.5vw, 40px);
+
+  min-width: clamp(90px, 7vw, 130px);
+  min-height: clamp(44px, 5vh, 60px);
+
+  padding: clamp(8px, 1vh, 12px) clamp(14px, 1.5vw, 22px);
+
+  background-color: #f4b183;
+  color: #ffffff;
+
+  border: none;
+  border-radius: clamp(8px, 1vw, 12px);
+
+  font-family: "MaplestoryOTFBold", sans-serif;
+  font-size: clamp(18px, 1.4vw, 24px);
+  font-weight: 700;
+
+  cursor: pointer;
+
+  z-index: 1100;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.home-button:hover {
+  background-color: #e89d5b;
+  transform: scale(1.05);
+}
+
+.home-button:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   5. 시작 화면
+   ============================================================ */
+
+#start-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100vw;
+  height: 100dvh;
+
+  padding: clamp(16px, 4vw, 40px);
+
+  background-color: rgba(0, 0, 0, 0.6);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1000;
+}
+
+/* ============================================================
+   6. 시작 팝업
+   ============================================================ */
+
+#start-popup {
+  width: min(90vw, 760px);
+
+  max-height: 90dvh;
+
+  padding: clamp(24px, 4vw, 50px) clamp(20px, 5vw, 60px);
+
+  background-color: #ffffff;
+
+  border-radius: clamp(14px, 2vw, 24px);
+
+  text-align: center;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+  overflow-y: auto;
+
+  animation: fadeIn 0.5s ease;
+}
+
+/* 시작 제목 */
+
+#start-popup h2 {
+  margin: 0 0 clamp(16px, 2.5vh, 28px);
+
+  font-family: "MaplestoryOTFBold", sans-serif;
+
+  font-size: clamp(24px, 3vw, 42px);
+
+  line-height: 1.35;
+
+  color: #a0522d;
+}
+
+/* 설명 */
+
+#start-popup .instruction {
+  margin: 0 0 clamp(22px, 4vh, 40px);
+
+  font-family: "MaplestoryOTFBold", sans-serif;
+
+  font-size: clamp(16px, 1.6vw, 24px);
+
+  line-height: 1.7;
+
+  color: #555555;
+}
+
+/* ============================================================
+   7. 시작 버튼
+   ============================================================ */
+
+#start-button {
+  min-width: clamp(160px, 20vw, 260px);
+
+  min-height: clamp(58px, 8vh, 82px);
+
+  padding: clamp(10px, 1.5vh, 16px) clamp(20px, 3vw, 40px);
+
+  font-family: "MaplestoryOTFBold", sans-serif;
+
+  font-size: clamp(24px, 3.5vw, 48px);
+
+  background-color: #f4a261;
+
+  color: #ffffff;
+
+  border: none;
+
+  border-radius: clamp(10px, 1.2vw, 16px);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+#start-button:hover {
+  background-color: #e67e22;
+
+  transform: scale(1.03);
+}
+
+#start-button:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   8. 시작 팝업 애니메이션
+   ============================================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   9. 게임 제목
+   ============================================================ */
+
+#game-title {
+  width: 100%;
+
+  margin: clamp(14px, 2vh, 24px) 0 clamp(8px, 1vh, 14px);
+
+  font-family: "MaplestoryOTFBold", sans-serif;
+
+  font-size: clamp(26px, 3vw, 44px);
+
+  line-height: 1.2;
+
+  color: #444444;
+}
+
+/* ============================================================
+   10. 타이머
+   ============================================================ */
+
+#timer-bar-container {
+  width: min(calc(100% - clamp(20px, 6vw, 100px)), 1600px);
+
+  height: clamp(14px, 2vh, 24px);
+
+  margin: clamp(10px, 1.5vh, 20px) auto;
+
+  background-color: #eeeeee;
+
+  border-radius: 999px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+}
+
+/* 타이머 진행 바 */
+
+#timer-bar {
+  width: 100%;
+  height: 100%;
+
+  background-color: #f4a261;
+
+  border-radius: inherit;
+
+  transition:
+    width 1s linear,
+    background-color 0.5s ease;
+}
+
+/* 기존 timer-text가 존재할 경우 */
+
+#timer-text {
+  min-width: 30px;
+
+  margin-left: 8px;
+
+  text-align: right;
+
+  font-family: sans-serif;
+
+  font-size: clamp(14px, 1.2vw, 20px);
+
+  font-weight: bold;
+
+  color: #333333;
+}
+
+/* ============================================================
+   11. 게임 영역
+   ============================================================ */
+
+.game-container {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  gap: clamp(12px, 2vw, 32px);
+
+  margin: clamp(12px, 2vh, 24px) auto clamp(12px, 2vh, 24px);
+
+  padding: 0 clamp(10px, 2vw, 30px);
+}
+
+/* ============================================================
+   12. Canvas
+   ============================================================ */
+
+/*
+  중요:
+  실제 Canvas 내부 해상도는 HTML에서
+
+  width="500"
+  height="500"
+
+  으로 유지한다.
+
+  아래 width / height는
+  "화면에 보이는 크기"만 조절한다.
+*/
+
+canvas {
+  display: block;
+
+  width: min(44vw, 700px);
+
+  height: auto;
+
+  aspect-ratio: 1 / 1;
+
+  border: clamp(2px, 0.2vw, 3px) solid #555555;
+
+  background-color: #ffffff;
+
+  cursor: crosshair;
+
+  touch-action: none;
+
+  user-select: none;
+
+  -webkit-user-select: none;
+
+  flex: 0 1 auto;
+
+  max-width: 100%;
+}
+
+/* ============================================================
+   13. 게임 메시지
+   ============================================================ */
+
+#message {
+  width: 100%;
+
+  min-height: clamp(32px, 5vh, 60px);
+
+  margin: clamp(6px, 1vh, 12px) 0 0;
+
+  padding: 0 10px;
+
+  font-family: "MaplestoryOTFBold", sans-serif;
+
+  font-size: clamp(24px, 3.2vw, 36px);
+
+  line-height: 1.4;
+
+  color: #444444;
+}
+
+/* ============================================================
+   14. 결과 팝업
+   ============================================================ */
+
+.popup.hidden {
+  display: none !important;
+}
+
+.popup {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100vw;
+  height: 100dvh;
+
+  padding: clamp(16px, 4vw, 40px);
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  z-index: 1200;
+}
+
+/* 결과 팝업 내부 */
+
+.popup-content {
+  width: min(90vw, 850px);
+
+  max-height: 80dvh;
+
+  padding: clamp(26px, 4vw, 50px) clamp(22px, 5vw, 60px);
+
+  background-color: #ffffff;
+
+  border-radius: clamp(14px, 2vw, 22px);
+
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+
+  text-align: center;
+
+  font-family: "MaplestoryOTFBold", sans-serif;
+
+  font-size: clamp(28px, 3.5vw, 42px);
+
+  font-weight: bold;
+
+  line-height: 1.5;
+
+  overflow-y: auto;
+}
+
+/* ============================================================
+   15. 큰 PC
+   1920px 이상
+   ============================================================ */
+
+@media (min-width: 1600px) {
+  .game-container {
+    gap: 30px;
+  }
+
+  canvas {
+    width: min(42vw, 850px);
+  }
+
+  #message {
+    font-size: 45px;
+  }
+}
+
+/* ============================================================
+   16. 일반 노트북 / PC
+   1001px ~ 1599px
+   ============================================================ */
+
+@media (min-width: 1001px) and (max-width: 1599px) {
+  .game-container {
+    gap: 20px;
+
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  canvas {
+    width: min(43vw, 580px);
+  }
+
+  #game-title {
+    margin-top: 14px;
+  }
+}
+
+/* ============================================================
+   17. 태블릿
+   769px ~ 1000px
+   ============================================================ */
+
+@media (min-width: 769px) and (max-width: 1000px) {
+  .game-container {
+    gap: 16px;
+
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  canvas {
+    width: calc(50vw - 30px);
+
+    max-width: 470px;
+  }
+
+  #timer-bar-container {
+    width: calc(100% - 40px);
+  }
+}
+
+/* ============================================================
+   18. 모바일
+   768px 이하
+   ============================================================ */
+
+@media (max-width: 768px) {
+  body {
+    padding: 5px;
+  }
+
+  /* HOME */
+
+  .home-button {
+    top: 12px;
+    right: 12px;
+
+    min-width: 82px;
+    min-height: 42px;
+
+    padding: 8px 14px;
+
+    font-size: 18px;
+  }
+
+  /* 제목 */
+
+  #game-title {
+    padding: 10px;
+
+    margin: 10px 0 8px;
+
+    font-size: clamp(26px, 7vw, 36px);
+  }
+
+  /* 타이머 */
+
+  #timer-bar-container {
+    width: calc(100% - 24px);
+
+    height: 14px;
+
+    margin: 8px auto 12px;
+  }
+
+  /* 게임 영역 */
+
+  .game-container {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    margin: 12px auto 10px;
+
+    padding: 0 12px;
+  }
+
+  /*
+    모바일에서는 두 그림을
+    세로로 배치한다.
+  */
+
+  canvas {
+    width: min(calc(100vw - 24px), 500px);
+
+    height: auto;
+
+    max-width: 500px;
+  }
+
+  /* 메시지 */
+
+  #message {
+    margin-top: 4px;
+
+    font-size: clamp(20px, 5.5vw, 28px);
+  }
+
+  /* 결과 팝업 */
+
+  .popup-content {
+    width: calc(100vw - 40px);
+
+    padding: 28px 22px;
+
+    font-size: clamp(21px, 6vw, 30px);
+  }
+}
+
+/* ============================================================
+   19. 작은 모바일
+   600px 이하
+   ============================================================ */
+
+@media (max-width: 600px) {
+  #start-popup {
+    width: calc(100vw - 30px);
+
+    padding: 24px 18px;
+  }
+
+  #start-popup h2 {
+    font-size: clamp(20px, 5.5vw, 28px);
+  }
+
+  #start-popup .instruction {
+    font-size: clamp(14px, 4vw, 18px);
+
+    line-height: 1.6;
+  }
+
+  #start-button {
+    width: min(70vw, 220px);
+
+    min-height: 56px;
+
+    font-size: 26px;
+  }
+
+  .game-container {
+    gap: 10px;
+
+    padding: 5px;
+  }
+
+  canvas {
+    width: calc(100vw - 50px);
+  }
+
+  #message {
+    padding: 0 8px;
+
+    font-size: 21px;
+  }
+}
+
+/* ============================================================
+   20. 아주 작은 모바일
+   400px 이하
+   ============================================================ */
+
+@media (max-width: 400px) {
+  .home-button {
+    top: 8px;
+    right: 8px;
+
+    min-width: 72px;
+    min-height: 38px;
+
+    padding: 6px 10px;
+
+    font-size: 16px;
+  }
+
+  #game-title {
+    padding: 5px;
+
+    font-size: 25px;
+  }
+
+  #timer-bar-container {
+    width: calc(100% - 16px);
+
+    height: 12px;
+  }
+
+  .game-container {
+    gap: 8px;
+
+    padding: 0 6px;
+  }
+
+  canvas {
+    width: calc(100vw - 50px);
+  }
+
+  #message {
+    font-size: 19px;
+  }
+
+  #start-popup {
+    width: calc(100vw - 20px);
+
+    padding: 20px 14px;
+
+    border-radius: 14px;
+  }
+
+  #start-popup h2 {
+    font-size: 21px;
+  }
+
+  #start-popup .instruction {
+    font-size: 14px;
+  }
+
+  #start-button {
+    width: 180px;
+
+    min-height: 52px;
+
+    font-size: 23px;
+  }
+}
+
+/* ============================================================
+   21. 가로형 모바일 / 태블릿
+   ============================================================ */
+
+@media (max-width: 1000px) and (orientation: landscape) {
+  /*
+    가로 화면에서는 세로 공간이 부족하기 때문에
+    두 Canvas를 다시 좌우로 배치한다.
+  */
+
+  .game-container {
+    flex-direction: row;
+
+    gap: 12px;
+
+    margin-top: 8px;
+  }
+
+  canvas {
+    width: min(44vw, 45vh, 500px);
+
+    height: auto;
+  }
+
+  #game-title {
+    margin: 6px 0;
+
+    font-size: clamp(22px, 4vw, 30px);
+  }
+
+  #timer-bar-container {
+    margin: 6px auto;
+
+    height: 12px;
+  }
+
+  #message {
+    min-height: 28px;
+
+    font-size: 20px;
+  }
+}
+
+/* ============================================================
+   22. 가로형 작은 모바일
+   ============================================================ */
+
+@media (max-width: 600px) and (orientation: landscape) {
+  .home-button {
+    top: 6px;
+    right: 8px;
+
+    min-height: 36px;
+
+    padding: 5px 10px;
+
+    font-size: 15px;
+  }
+
+  #game-title {
+    padding-right: 70px;
+
+    margin: 4px 0;
+
+    font-size: 22px;
+  }
+
+  #timer-bar-container {
+    margin: 4px auto;
+
+    height: 10px;
+  }
+
+  .game-container {
+    gap: 8px;
+
+    padding: 0 8px;
+
+    margin: 6px auto;
+  }
+
+  canvas {
+    width: min(46vw, 44vh);
+  }
+
+  #message {
+    min-height: 24px;
+
+    margin-top: 2px;
+
+    font-size: 18px;
+  }
+}
+
+/* ============================================================
+   23. 모션 최소화 설정
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+  }
+}

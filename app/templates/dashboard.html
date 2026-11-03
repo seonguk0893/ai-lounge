@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>대시보드 - 스마트시티 시민 서비스</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/common.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/fullscreen.css') }}"
+    />
+  </head>
+
+  <body>
+    {% include 'nav.html' %}
+
+    <div
+      id="screen-dashboard"
+      class="screen active"
+      style="background: var(--bg); flex-direction: column"
+    >
+      <div class="dashboard-body">
+        <!-- ================= 에너지 ================= -->
+        <div class="dashboard-top-header">
+          <div class="section-header-card">
+            <h2>🤖 AI 라운지 이용현황</h2>
+
+            <span class="section-badge bg-ai">AI 서비스 운영 데이터</span>
+          </div>
+
+          <div class="section-header-card">
+            <h2>☀️ 광주 친환경 에너지 인프라</h2>
+
+            <span class="section-badge bg-energy">에너지 분야 데이터 연계</span>
+          </div>
+        </div>
+
+        <div class="dash-row dash-row-3">
+          <!-- AI 이용현황 -->
+          <div class="dash-panel">
+            <div class="panel-label">AI 라운지</div>
+
+            <div class="panel-title">AI 서비스 이용현황</div>
+
+            <div class="ai-dashboard">
+              <!-- 왼쪽 -->
+
+              <div class="ai-stats">
+                <div class="ai-stat">
+                  <span>누적 방문 세션</span>
+                  <strong id="userCount">0회</strong>
+                </div>
+
+                <div class="ai-stat">
+                  <span>AI 서비스 이용건수</span>
+                  <strong id="chatCount">0건</strong>
+                </div>
+
+                <div class="ai-stat">
+                  <span>금일 이용량</span>
+                  <strong id="completionRate">0건</strong>
+                </div>
+              </div>
+
+              <!-- 오른쪽 -->
+              <div class="ai-chart">
+                <div class="chart-title">서비스 이용 현황 TOP 5</div>
+                <div class="usage-chart" id="usageChart"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 태양광 -->
+          <div class="dash-panel">
+            <div class="panel-label">태양광 발전소</div>
+            <div class="panel-title">운영 현황</div>
+            <div class="data-list" id="solarPlantList"></div>
+          </div>
+
+          <!-- 에너지 통계 -->
+          <div class="dash-panel">
+            <div class="panel-label">신재생에너지</div>
+
+            <div class="panel-title">보급 현황</div>
+
+            <div class="mini-stat-grid">
+              <div class="mini-stat">
+                <div class="mini-stat-label">발전시설</div>
+
+                <div class="mini-stat-val" id="totalPlantCount">-</div>
+              </div>
+
+              <div class="mini-stat">
+                <div class="mini-stat-label">총 설비용량</div>
+
+                <div class="mini-stat-val" id="totalCapacity">-</div>
+              </div>
+            </div>
+
+            <div class="bar-chart" id="energyTypeChart"></div>
+            <div class="bar-labels" id="energyTypeLabels"></div>
+            <div class="chart-guide">
+              💡 막대를 클릭하면 해당 에너지 종류의 발전소 목록을 확인할 수
+              있습니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= 안전 ================= -->
+        <div class="section-header-grid">
+          <div class="section-header-card">
+            <h2>🛡️ 우리동네 스마트 안전망</h2>
+
+            <span class="section-badge bg-safety">
+              안전·시설·민원 데이터 연계
+            </span>
+          </div>
+        </div>
+
+        <div class="dash-row dash-row-3">
+          <div class="dash-panel">
+            <div class="panel-label">임대아파트</div>
+            <div class="panel-title">안전시설 현황</div>
+            <div class="data-list" id="apartmentList"></div>
+          </div>
+
+          <div class="dash-panel">
+            <div class="panel-label">CCTV</div>
+
+            <div class="panel-title">CCTV 현황</div>
+
+            <div class="panel-content">
+              <div class="panel-left">
+                <div class="mini-stat-grid">
+                  <div class="mini-stat">
+                    <div class="mini-stat-label">CCTV 설치지점</div>
+                    <div class="mini-stat-val" id="cctvNormal">-</div>
+                  </div>
+
+                  <div class="mini-stat">
+                    <div class="mini-stat-label">총 카메라수</div>
+                    <div class="mini-stat-val" id="cctvInspect">-</div>
+                  </div>
+
+                  <div class="mini-stat">
+                    <div class="mini-stat-label">평균 보관일</div>
+                    <div class="mini-stat-val" id="cctvError">-</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-right">
+                <div class="data-list" id="cctvList"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dash-panel">
+            <div class="panel-label">빛고을CC</div>
+            <div class="panel-title">분실물 및 이용객 현황</div>
+
+            <div class="panel-content">
+              <div class="panel-left">
+                <div class="mini-stat-grid">
+                  <div class="mini-stat">
+                    <div class="mini-stat-label">누적 이용객</div>
+                    <div class="mini-stat-val" id="visitorCount">-</div>
+                  </div>
+
+                  <div class="mini-stat">
+                    <div class="mini-stat-label">누적 고객 문의</div>
+                    <div class="mini-stat-val" id="customerCount">-</div>
+                  </div>
+
+                  <div class="mini-stat">
+                    <div class="mini-stat-label">누적 분실물 접수</div>
+                    <div class="mini-stat-val" id="lostCount">-</div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel-right">
+                <div class="data-list" id="bitgoeulList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="renewableModal" class="modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 id="renewableModalTitle">발전소 목록</h3>
+          <button id="closeRenewableModal">✕</button>
+        </div>
+        <div id="renewableList" class="data-list"></div>
+      </div>
+    </div>
+
+    <div id="panelZoomModal" class="panel-zoom-modal">
+      <div class="panel-zoom-box">
+        <button id="closePanelZoom" class="panel-zoom-close">✕</button>
+
+        <div id="panelZoomContent" class="panel-zoom-content"></div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "measured_at": "2026-10-20T14:49:14",
+  "target_url": "https://loungeai.net/send_message",
+  "total_requests": 50,
+  "success_count": 50,
+  "error_count": 0,
+  "http_error_count": 0,
+  "network_error_count": 0,
+  "json_error_count": 0,
+  "success_rate_percent": 100.0,
+  "error_rate_percent": 0.0,
+  "average_latency_sec": 17.478,
+  "median_latency_sec": 18.114,
+  "min_latency_sec": 0.312,
+  "max_latency_sec": 36.681,
+  "p95_latency_sec": 29.982,
+  "latency_statistic_basis": "successful requests only",
+  "percentile_method": "linear interpolation"
+}

@@ -1,0 +1,773 @@
+/* static/css/index.css */
+
+/* =========================================================
+   [홈 (Home) 화면 전용 스타일]
+========================================================= */
+
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#screen-home {
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      ellipse at 60% 0%,
+      rgba(0, 212, 255, 0.08),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 10% 80%,
+      rgba(124, 58, 237, 0.08),
+      transparent 50%
+    ),
+    var(--bg);
+
+  align-items: stretch;
+}
+
+/* =========================================================
+   QR CODE
+========================================================= */
+.home-qr {
+  position: fixed;
+
+  top: 9%;
+  left: 2%;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  z-index: 20;
+}
+
+.home-qr img {
+  width: 95px;
+  height: 95px;
+
+  display: block;
+}
+
+.home-qr-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  color: #26344a;
+  white-space: nowrap;
+}
+
+.home-qr-text strong {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.home-qr-text span {
+  font-size: 18px;
+  color: #667085;
+}
+
+/* =========================================================
+   전체 홈 영역
+========================================================= */
+
+.home-inner {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 20px 32px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 10px;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   상단 버튼 영역
+========================================================= */
+
+.home-top-controls {
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 16px;
+
+  margin-bottom: 20px;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   음성안내 체험하기
+========================================================= */
+
+.voice-experience-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px 24px;
+
+  border-radius: 40px;
+  border: 1px solid var(--border);
+
+  background: var(--surface2);
+  color: var(--text-muted);
+
+  /*
+    기본 크기 × 큰글씨 모드
+  */
+  font-size: calc(24px * var(--large-mode));
+
+  cursor: pointer;
+
+  transition:
+    font-size 0.3s,
+    padding 0.25s,
+    all 0.25s;
+
+  white-space: nowrap;
+
+  min-width: 0;
+}
+
+.voice-experience-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+
+  transform: translateY(-3px);
+}
+
+/* =========================================================
+   큰 글씨 버튼
+========================================================= */
+
+.home-top-controls .large-mode-btn {
+  position: static;
+}
+
+.large-mode-btn {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px 24px;
+
+  border-radius: 30px;
+  border: 1px solid var(--border);
+
+  background: var(--surface2);
+
+  cursor: pointer;
+
+  color: var(--text-muted);
+
+  font-family: var(--font-main);
+
+  font-size: calc(24px * var(--large-mode));
+
+  transition:
+    font-size 0.3s,
+    padding 0.25s,
+    all 0.2s;
+
+  white-space: nowrap;
+
+  min-width: 0;
+}
+
+.large-mode-btn.active {
+  border-color: var(--accent4);
+
+  color: var(--accent4);
+
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.large-mode-toggle {
+  width: 36px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  background: var(--border);
+
+  border-radius: 10px;
+
+  position: relative;
+
+  transition: background 0.2s;
+}
+
+.large-mode-btn.active .large-mode-toggle {
+  background: var(--accent4);
+}
+
+.large-mode-toggle::after {
+  content: "";
+
+  position: absolute;
+
+  width: 14px;
+  height: 14px;
+
+  background: white;
+
+  border-radius: 50%;
+
+  top: 3px;
+  left: 3px;
+
+  transition: transform 0.2s;
+}
+
+.large-mode-btn.active .large-mode-toggle::after {
+  transform: translateX(16px);
+}
+
+/* =========================================================
+   서비스 카드 영역
+========================================================= */
+
+.home-service-grid {
+  flex: 1;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+
+  gap: 20px;
+
+  width: 100%;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   서비스 카드
+========================================================= */
+
+.service-card {
+  min-width: 0;
+  min-height: 0;
+
+  padding: 20px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 30px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  cursor: pointer;
+
+  transition: all 0.25s;
+
+  text-align: center;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+.service-card:hover {
+  border-color: var(--accent);
+
+  transform: translateY(-3px);
+
+  background: var(--surface2);
+}
+
+/* =========================================================
+   서비스 이름
+========================================================= */
+
+.service-card .s-name {
+  font-size: calc(clamp(24px, 2.2vw, 40px) * var(--large-mode));
+
+  font-weight: 700;
+
+  transition: font-size 0.3s;
+
+  line-height: 1.2;
+
+  word-break: keep-all;
+
+  max-width: 100%;
+}
+
+/* =========================================================
+   서비스 설명
+========================================================= */
+
+.service-card .s-desc {
+  font-size: calc(clamp(16px, 1.8vw, 36px) * var(--large-mode));
+
+  color: var(--text-muted);
+
+  line-height: 1.5;
+
+  transition: font-size 0.3s;
+
+  word-break: keep-all;
+
+  max-width: 90%;
+}
+
+/* =========================================================
+   카드 색상
+========================================================= */
+
+.service-card.color-1 {
+  --c: var(--accent);
+}
+
+.service-card.color-2 {
+  --c: var(--accent2);
+}
+
+.service-card.color-3 {
+  --c: var(--accent3);
+}
+
+.service-card.color-4 {
+  --c: var(--accent4);
+}
+
+.service-card:hover .s-name {
+  color: var(--c);
+}
+
+/* =========================================================
+   캐릭터 이미지
+========================================================= */
+
+.service-img {
+  width: clamp(100px, 13vw, 220px);
+
+  height: clamp(100px, 13vw, 220px);
+
+  max-width: 60%;
+  max-height: 45%;
+
+  object-fit: contain;
+
+  margin-bottom: 8px;
+
+  transition:
+    width 0.3s,
+    height 0.3s,
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+}
+
+/*
+  큰글씨 모드에서는 캐릭터도 살짝 확대
+*/
+.service-card .service-img {
+  transform: scale(var(--large-mode));
+}
+
+.service-card:hover .service-img {
+  transform: translateY(-8px) scale(calc(1 * var(--large-mode)));
+}
+
+/* =========================================================
+   태블릿
+   768px ~ 1199px
+========================================================= */
+
+@media (max-width: 1205px) {
+  .home-qr {
+    top: 12%;
+  }
+  .home-qr img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .home-qr-text strong {
+    font-size: 16px;
+  }
+
+  .home-qr-text span {
+    font-size: 12px;
+  }
+  .home-inner {
+    padding: 18px 24px;
+  }
+
+  .home-top-controls {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .voice-experience-btn,
+  .large-mode-btn {
+    padding: 9px 18px;
+
+    /*
+      20px × 큰글씨 모드
+    */
+    font-size: calc(20px * var(--large-mode));
+  }
+
+  .home-service-grid {
+    gap: 16px;
+  }
+
+  .service-card {
+    padding: 16px;
+
+    border-radius: 24px;
+
+    gap: 8px;
+  }
+
+  .service-card .s-name {
+    font-size: calc(22px * var(--large-mode));
+  }
+
+  .service-card .s-desc {
+    font-size: calc(20px * var(--large-mode));
+  }
+
+  .service-img {
+    width: clamp(110px, 18vw, 180px);
+
+    height: clamp(110px, 18vw, 180px);
+  }
+}
+
+/* =========================================================
+   세로형 태블릿 / 대형 디스플레이
+========================================================= */
+
+@media screen and (min-width: 481px) and (max-width: 1200px) {
+  .home-qr {
+    top: 4%;
+    right: 0;
+
+    gap: 8px;
+  }
+
+  .home-qr img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .home-qr-text strong {
+    font-size: 0.85rem;
+  }
+
+  .home-qr-text span {
+    font-size: 0.65rem;
+  }
+}
+
+/* =========================================================
+   작은 태블릿 / 모바일
+   767px 이하
+========================================================= */
+
+@media (max-width: 767px) {
+  .home-inner {
+    min-height: 100vh;
+
+    padding: 14px 16px;
+
+    gap: 8px;
+  }
+
+  /* =======================================================
+     상단 버튼
+  ======================================================= */
+
+  .home-top-controls {
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-bottom: 10px;
+  }
+
+  .voice-experience-btn,
+  .large-mode-btn {
+    padding: 8px 14px;
+
+    font-size: calc(16px * var(--large-mode));
+
+    border-radius: 24px;
+  }
+
+  .large-mode-btn {
+    gap: 7px;
+  }
+
+  .large-mode-toggle {
+    width: 30px;
+    height: 18px;
+  }
+
+  .large-mode-toggle::after {
+    width: 12px;
+    height: 12px;
+
+    top: 3px;
+    left: 3px;
+  }
+
+  .large-mode-btn.active .large-mode-toggle::after {
+    transform: translateX(12px);
+  }
+
+  /* =======================================================
+     서비스 카드
+  ======================================================= */
+
+  .home-service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+  }
+
+  .service-card {
+    padding: 12px;
+
+    border-radius: 20px;
+
+    gap: 6px;
+  }
+
+  .service-img {
+    width: clamp(80px, 22vw, 140px);
+
+    height: clamp(80px, 22vw, 140px);
+
+    max-width: 65%;
+  }
+
+  .service-card .s-name {
+    font-size: calc(clamp(19px, 4vw, 26px) * var(--large-mode));
+  }
+
+  .service-card .s-desc {
+    font-size: calc(clamp(13px, 3vw, 18px) * var(--large-mode));
+
+    line-height: 1.4;
+
+    max-width: 95%;
+  }
+}
+
+/* =========================================================
+   모바일 세로
+   575px 이하
+========================================================= */
+
+@media (max-width: 575px) {
+  #screen-home {
+    min-height: 100dvh;
+  }
+
+  .home-qr {
+    display: none;
+  }
+
+  .home-inner {
+    min-height: 100dvh;
+
+    padding: 12px;
+
+    gap: 8px;
+  }
+
+  /* =======================================================
+     상단 버튼
+  ======================================================= */
+
+  .home-top-controls {
+    width: 100%;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
+  }
+
+  .voice-experience-btn,
+  .large-mode-btn {
+    flex: 1;
+
+    padding: 9px 10px;
+
+    /*
+      14px × 큰글씨 모드
+    */
+    font-size: calc(14px * var(--large-mode));
+
+    min-width: 0;
+  }
+
+  .large-mode-btn {
+    justify-content: center;
+  }
+
+  /* =======================================================
+     서비스 카드
+  ======================================================= */
+
+  .home-service-grid {
+    /*
+      모바일에서는 세로 4개
+    */
+
+    grid-template-columns: 1fr;
+
+    grid-template-rows: repeat(4, minmax(0, auto));
+
+    gap: 10px;
+
+    flex: none;
+
+    width: 100%;
+  }
+
+  .service-card {
+    min-height: 180px;
+
+    padding: 16px;
+
+    border-radius: 20px;
+
+    gap: 6px;
+  }
+
+  .service-img {
+    width: 100px;
+
+    height: 100px;
+
+    max-width: 40%;
+
+    max-height: 110px;
+
+    margin-bottom: 2px;
+  }
+
+  .service-card .s-name {
+    font-size: calc(22px * var(--large-mode));
+  }
+
+  .service-card .s-desc {
+    font-size: calc(15px * var(--large-mode));
+
+    line-height: 1.4;
+
+    max-width: 90%;
+  }
+}
+
+/* =========================================================
+   아주 작은 모바일
+   375px 이하
+========================================================= */
+
+@media (max-width: 375px) {
+  .home-inner {
+    padding: 10px;
+  }
+
+  .home-top-controls {
+    gap: 6px;
+  }
+
+  .voice-experience-btn,
+  .large-mode-btn {
+    padding: 8px;
+
+    font-size: calc(13px * var(--large-mode));
+  }
+
+  .large-mode-btn {
+    gap: 5px;
+  }
+
+  .service-card {
+    min-height: 160px;
+
+    padding: 12px;
+
+    border-radius: 18px;
+  }
+
+  .service-img {
+    width: 82px;
+    height: 82px;
+  }
+
+  .service-card .s-name {
+    font-size: calc(19px * var(--large-mode));
+  }
+
+  .service-card .s-desc {
+    font-size: calc(13px * var(--large-mode));
+  }
+}
+
+/* =========================================================
+   가로가 매우 짧은 모바일
+========================================================= */
+
+@media (max-height: 600px) and (max-width: 767px) {
+  .home-inner {
+    min-height: auto;
+  }
+
+  .home-service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    grid-template-rows: repeat(2, minmax(150px, 1fr));
+  }
+
+  .service-card {
+    min-height: 150px;
+  }
+
+  .service-img {
+    width: 75px;
+    height: 75px;
+  }
+
+  .service-card .s-name {
+    font-size: calc(18px * var(--large-mode));
+  }
+
+  .service-card .s-desc {
+    font-size: calc(12px * var(--large-mode));
+  }
+}

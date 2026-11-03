@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>키즈 콘텐츠</title>
+    <link rel="icon" href="static/images/favicon.ico" />
+    <link rel="stylesheet" href="static/css/games.css" />
+  </head>
+  <body>
+    <div class="header">
+      <button onclick="location.href = '/'">홈으로 이동</button>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="card" id="puzzle-card" onclick="location.href = '/game1'">
+        <img src="static/images/game1.png" alt="퍼즐맞추기" />
+        <div class="card-title">퍼즐 맞추기</div>
+      </div>
+      <div class="card" onclick="location.href = '/game2'">
+        <img src="static/images/game2.png" alt="틀린그림찾기" />
+        <div class="card-title">틀린그림 찾기</div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="static/js/game1.js"></script>
+  </body>
+</html>

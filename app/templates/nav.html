@@ -1,0 +1,416 @@
+<script>
+  /* =========================
+     테마
+  ========================= */
+  if (localStorage.getItem("smartcity_theme") === "light") {
+    document.body.classList.add("light-theme");
+  }
+
+  /* =========================
+     설문 모달 열기
+  ========================= */
+  function openSurveyModal() {
+    const modal = document.getElementById("surveyModal");
+
+    if (!modal) {
+      console.error("surveyModal을 찾을 수 없습니다.");
+      return;
+    }
+
+    modal.classList.add("show");
+  }
+
+  /* =========================
+     설문 모달 닫기
+  ========================= */
+  function closeSurveyModal() {
+    const modal = document.getElementById("surveyModal");
+
+    if (!modal) {
+      return;
+    }
+
+    modal.classList.remove("show");
+  }
+
+  /* =========================
+     설문 제출
+  ========================= */
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("surveyForm");
+
+    if (!form) {
+      return;
+    }
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      const data = {
+        satisfaction: Number(formData.get("satisfaction")),
+
+        reuse_intention: Number(formData.get("reuse_intention")),
+
+        understanding: Number(formData.get("understanding")),
+
+        free_comment: formData.get("free_comment") || "",
+      };
+
+      /* =========================
+         서버에 설문 전송
+      ========================= */
+
+      try {
+        const response = await fetch("/survey/submit", {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        /* =========================
+           설문 저장 실패
+        ========================= */
+
+        if (!response.ok || !result.success) {
+          alert(result.message || "설문 저장 중 문제가 발생했습니다.");
+
+          return;
+        }
+
+        /* =========================
+           설문 저장 성공
+           현재 세션 종료 완료
+        ========================= */
+
+        console.log("설문 저장 완료");
+        console.log("세션 종료 완료");
+
+        /* 설문 입력 화면 숨기기 */
+
+        const surveyQuestions = form.querySelectorAll(
+          ".survey-question, .survey-actions",
+        );
+
+        surveyQuestions.forEach(function (element) {
+          element.style.display = "none";
+        });
+
+        /* 헤더도 숨기기 */
+
+        const surveyHeader = document.querySelector(".survey-header");
+
+        if (surveyHeader) {
+          surveyHeader.style.display = "none";
+        }
+
+        /* 완료 화면 표시 */
+
+        const complete = document.getElementById("survey-complete");
+
+        if (!complete) {
+          console.error("survey-complete을 찾을 수 없습니다.");
+
+          window.location.href = "/";
+
+          return;
+        }
+
+        complete.style.display = "block";
+
+        /* =========================
+           3초 카운트다운
+        ========================= */
+
+        let count = 3;
+
+        const countdown = document.getElementById("countdown");
+
+        if (countdown) {
+          countdown.textContent = count;
+        }
+
+        const timer = setInterval(function () {
+          count--;
+
+          if (countdown) {
+            countdown.textContent = count;
+          }
+
+          if (count <= 0) {
+            clearInterval(timer);
+
+            /* 홈으로 이동 */
+
+            window.location.href = "/";
+          }
+        }, 1000);
+      } catch (error) {
+        /* =========================
+         통신 오류
+      ========================= */
+
+        console.error("설문 제출 오류:", error);
+
+        alert("설문을 제출하는 중 오류가 발생했습니다.");
+      }
+    });
+  });
+</script>
+
+<!-- =========================
+     네비게이션
+========================= -->
+
+<nav class="nav-bar">
+  <div class="nav-logo">
+    <div class="nav-dot"></div>
+
+    스마트시티 <span>시민 서비스</span>
+  </div>
+
+  <div class="nav-tabs">
+    <!-- 홈 대신 종료 및 설문 -->
+    {% if active_page != 'home' %}
+
+    <button class="nav-tab" onclick="openSurveyModal()">📝 종료 및 설문</button>
+
+    {% endif %}
+
+    <!-- AI 음성 안내 -->
+
+    <button
+      class="nav-tab {% if active_page == 'voice' %}active{% endif %}"
+      onclick="location.href = '/voice'"
+    >
+      🎙️ AI 음성 안내
+    </button>
+
+    <!-- AI 채팅 -->
+
+    <button
+      class="nav-tab {% if active_page == 'chat' %}active{% endif %}"
+      onclick="location.href = '/chat'"
+    >
+      💬 AI 채팅 서비스
+    </button>
+
+    <!-- 대시보드 -->
+
+    <button
+      class="nav-tab {% if active_page == 'dashboard' %}active{% endif %}"
+      onclick="location.href = '/dashboard'"
+    >
+      📊 대시보드
+    </button>
+
+    <!-- 지도 -->
+
+    <button
+      class="nav-tab {% if active_page == 'map' %}active{% endif %}"
+      onclick="location.href = '/map'"
+    >
+      📍 지도 서비스
+    </button>
+
+    <!-- 테마 -->
+
+    <button
+      class="nav-tab"
+      onclick="toggleTheme()"
+      style="margin-left: 12px"
+      title="화면 테마 변경"
+    >
+      <span class="theme-icon">☀️</span>
+    </button>
+  </div>
+
+  <div class="nav-time">--:--:--</div>
+</nav>
+
+<!-- =========================
+     종료 및 설문 모달
+========================= -->
+
+<div id="surveyModal" class="survey-modal">
+  <div class="survey-modal-content">
+    <!-- =========================
+         설문 헤더
+    ========================= -->
+
+    <div class="survey-header">
+      <div>
+        <h2>체험을 종료하시겠어요?</h2>
+
+        <p>체험 만족도 설문에 참여해주세요.</p>
+      </div>
+
+      <button type="button" class="survey-close" onclick="closeSurveyModal()">
+        ×
+      </button>
+    </div>
+
+    <!-- =========================
+         설문
+    ========================= -->
+
+    <form id="surveyForm">
+      <!-- 만족도 -->
+
+      <div class="survey-question">
+        <label> 1. 전체적인 체험 만족도는 어떠셨나요? </label>
+
+        <div class="rating-group">
+          <label>
+            <input type="radio" name="satisfaction" value="1" required />
+            <span>1</span>
+          </label>
+
+          <label>
+            <input type="radio" name="satisfaction" value="2" />
+            <span>2</span>
+          </label>
+
+          <label>
+            <input type="radio" name="satisfaction" value="3" />
+            <span>3</span>
+          </label>
+
+          <label>
+            <input type="radio" name="satisfaction" value="4" />
+            <span>4</span>
+          </label>
+
+          <label>
+            <input type="radio" name="satisfaction" value="5" />
+            <span>5</span>
+          </label>
+        </div>
+
+        <div class="rating-labels">
+          <span>매우 불만족</span>
+
+          <span>매우 만족</span>
+        </div>
+      </div>
+
+      <!-- 재이용 의향 -->
+
+      <div class="survey-question">
+        <label> 2. 앞으로 이 서비스를 다시 이용할 의향이 있으신가요? </label>
+
+        <div class="rating-group">
+          <label>
+            <input type="radio" name="reuse_intention" value="1" required />
+            <span>1</span>
+          </label>
+
+          <label>
+            <input type="radio" name="reuse_intention" value="2" />
+            <span>2</span>
+          </label>
+
+          <label>
+            <input type="radio" name="reuse_intention" value="3" />
+            <span>3</span>
+          </label>
+
+          <label>
+            <input type="radio" name="reuse_intention" value="4" />
+            <span>4</span>
+          </label>
+
+          <label>
+            <input type="radio" name="reuse_intention" value="5" />
+            <span>5</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 이해 용이성 -->
+
+      <div class="survey-question">
+        <label> 3. 서비스 이용 방법과 안내 내용은 이해하기 쉬웠나요? </label>
+
+        <div class="rating-group">
+          <label>
+            <input type="radio" name="understanding" value="1" required />
+            <span>1</span>
+          </label>
+
+          <label>
+            <input type="radio" name="understanding" value="2" />
+            <span>2</span>
+          </label>
+
+          <label>
+            <input type="radio" name="understanding" value="3" />
+            <span>3</span>
+          </label>
+
+          <label>
+            <input type="radio" name="understanding" value="4" />
+            <span>4</span>
+          </label>
+
+          <label>
+            <input type="radio" name="understanding" value="5" />
+            <span>5</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 자유 의견 -->
+
+      <div class="survey-question">
+        <label for="surveyComment">
+          4. 서비스 이용에 대한 의견이 있다면 자유롭게 남겨주세요.
+        </label>
+
+        <textarea
+          id="surveyComment"
+          name="free_comment"
+          placeholder="불편했던 점이나 좋았던 점을 자유롭게 작성해주세요."
+          maxlength="500"
+        ></textarea>
+      </div>
+
+      <!-- 버튼 -->
+
+      <div class="survey-actions">
+        <button
+          type="button"
+          class="survey-cancel"
+          onclick="closeSurveyModal()"
+        >
+          취소
+        </button>
+
+        <button type="submit" class="survey-submit">설문 제출하고 종료</button>
+      </div>
+    </form>
+
+    <!-- =========================
+         설문 완료 화면
+    ========================= -->
+
+    <div id="survey-complete" class="survey-complete" style="display: none">
+      <div class="complete-icon">✓</div>
+
+      <h2>설문이 완료되었습니다.</h2>
+
+      <p>소중한 의견을 남겨주셔서 감사합니다.</p>
+
+      <div class="complete-count">
+        <span id="countdown">3</span>초 후 홈 화면으로 이동합니다.
+      </div>
+    </div>
+  </div>
+</div>

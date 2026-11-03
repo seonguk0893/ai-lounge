@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>3x3 퍼즐 맞추기</title>
+    <link rel="icon" href="static/images/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="static/css/game1.css" />
+  </head>
+  <body>
+    <button
+      class="home-button hidden"
+      id="home-button"
+      onclick="location.href = '/games'"
+    >
+      HOME
+    </button>
+    <div id="start-overlay">
+      <div id="start-popup">
+        <h2>🧩 퍼즐 맞추기 게임을 시작할까요?</h2>
+        <p class="instruction">
+          타일을 터치해서 선택한 후, 다른 위치의 타일을 터치하면 자리가
+          바뀝니다!
+        </p>
+        <button id="start-button">게임 시작</button>
+      </div>
+    </div>
+
+    <!-- 퍼즐 영역 (처음엔 숨김) -->
+    <div class="container hidden" id="container">
+      <h1>퍼즐 맞추기</h1>
+      <div id="puzzle-board" class="board"></div>
+      <button onclick="shufflePuzzle()">다시 섞기</button>
+    </div>
+
+    <!-- 사이드바 (처음엔 숨김) -->
+    <div class="sidebar hidden" id="sidebar">
+      <h2>이미지 선택</h2>
+      <div class="thumbnails">
+        <img
+          src="static/images/game-image1.png"
+          onclick="setPuzzleImage('static/images/game-image1.png')"
+        />
+        <img
+          src="static/images/game-image2.png"
+          onclick="setPuzzleImage('static/images/game-image2.png')"
+        />
+        <img
+          src="static/images/game-image3.png"
+          onclick="setPuzzleImage('static/images/game-image3.png')"
+        />
+      </div>
+    </div>
+
+    <!-- 퍼즐 완료 팝업 -->
+    <div id="popup-overlay" class="popup-overlay">
+      <div id="popup" class="popup">
+        <h2>🎉 퍼즐 완료!</h2>
+        <p>모든 조각을 정확히 맞췄어요! 정말 멋져요 😊</p>
+      </div>
+    </div>
+
+    <script src="static/js/game1.js"></script>
+  </body>
+</html>

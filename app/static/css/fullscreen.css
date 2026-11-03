@@ -1,0 +1,874 @@
+/*
+ * PWA standalone/fullscreen layout override
+ * Load this file after common.css and each page's CSS file.
+ */
+
+:root {
+  --app-viewport-height: 100vh;
+  --app-safe-top: env(safe-area-inset-top, 0px);
+  --app-safe-right: env(safe-area-inset-right, 0px);
+  --app-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --app-safe-left: env(safe-area-inset-left, 0px);
+  --app-page-pad-x: clamp(16px, 2.25vw, 32px);
+  --app-page-pad-y: clamp(12px, 1.75vh, 24px);
+}
+
+/* dvh follows the visible area when a mobile browser/PWA chrome changes. */
+@supports (height: 100dvh) {
+  :root {
+    --app-viewport-height: 100dvh;
+  }
+}
+
+html,
+body {
+  width: 100%;
+  min-height: var(--app-viewport-height);
+  min-height: -webkit-fill-available;
+}
+
+/* The navigation occupies only its intrinsic height; the active screen owns the rest. */
+body:has(#screen-home),
+body:has(#screen-chat),
+body:has(#screen-dashboard) {
+  height: var(--app-viewport-height);
+  min-height: var(--app-viewport-height);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-inline: var(--app-safe-left) var(--app-safe-right);
+}
+
+body:has(#screen-home) > nav,
+body:has(#screen-home) > header,
+body:has(#screen-chat) > nav,
+body:has(#screen-chat) > header,
+body:has(#screen-dashboard) > nav,
+body:has(#screen-dashboard) > header {
+  flex: 0 0 auto;
+}
+
+#screen-home.active,
+#screen-voice.active,
+#screen-chat.active,
+#screen-dashboard.active {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  overflow: hidden;
+}
+
+/* ---------------- Home ---------------- */
+#screen-home {
+  align-items: stretch;
+}
+
+.home-inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  box-sizing: border-box;
+  padding: var(--app-page-pad-y) var(--app-page-pad-x)
+    calc(var(--app-page-pad-y) + var(--app-safe-bottom));
+}
+
+.home-top-controls {
+  flex: 0 0 auto;
+  margin-bottom: clamp(10px, 1.5vh, 20px);
+}
+
+.home-service-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.5vw, 20px);
+}
+
+.service-card {
+  min-height: 0;
+  padding: clamp(14px, 1.75vw, 24px);
+  gap: clamp(8px, 1vh, 12px);
+}
+
+.service-img {
+  width: clamp(96px, min(17vw, 25vh), 220px);
+  height: clamp(96px, min(17vw, 25vh), 220px);
+  max-height: 46%;
+}
+
+.service-card .s-name {
+  font-size: calc(clamp(24px, 2.55vw, 40px) * var(--large-mode));
+}
+.service-card .s-desc {
+  font-size: calc(clamp(18px, 2.1vw, 36px) * var(--large-mode));
+}
+
+/* ---------------- Chat ---------------- */
+#screen-chat {
+  /* Replaces the brittle calc(100vh - 80px). The flex page already excludes nav. */
+  height: auto;
+  min-height: 0;
+}
+
+.chat-dashboard-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  box-sizing: border-box;
+  padding: var(--app-page-pad-y) var(--app-page-pad-x)
+    calc(var(--app-page-pad-y) + var(--app-safe-bottom));
+}
+
+.chat-page-header {
+  width: auto;
+  flex: 0 0 auto;
+  margin-bottom: clamp(10px, 1.5vh, 20px);
+}
+
+.chat-dashboard-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-columns: minmax(190px, 220px) minmax(240px, 300px) minmax(
+      0,
+      1fr
+    );
+  gap: clamp(12px, 1.5vw, 20px);
+}
+
+.chat-col-menu,
+.chat-col-cards,
+.chat-col-chatbot,
+.chat-col-main {
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+}
+
+.service-menu-list,
+.quick-cards-wrapper,
+.cw-body,
+.event-grid {
+  min-height: 0;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.chat-window,
+.event-list-window {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  /* The old -30px moved content outside its grid cell and created a blank strip. */
+  transform: none;
+}
+
+.cw-header,
+.cw-footer {
+  flex: 0 0 auto;
+}
+.cw-body {
+  flex: 1 1 auto;
+}
+
+/* ---------------- Dashboard ---------------- */
+#screen-dashboard {
+  min-height: 0;
+}
+
+.dashboard-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  overscroll-behavior: contain;
+
+  padding: var(--app-page-pad-y) var(--app-page-pad-x)
+    calc(var(--app-page-pad-y) + var(--app-safe-bottom));
+
+  gap: clamp(20px, 1vh, 30px);
+}
+
+.dash-row {
+  min-width: 0;
+  min-height: 0;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.dash-panel {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.panel-zoom-modal {
+  padding: max(16px, var(--app-safe-top)) max(16px, var(--app-safe-right))
+    max(16px, var(--app-safe-bottom)) max(16px, var(--app-safe-left));
+}
+
+.panel-zoom-box {
+  max-height: min(92dvh, calc(var(--app-viewport-height) - 32px));
+}
+
+/* ---------------- Width and short-height adaptations ---------------- */
+@media (max-width: 980px) {
+  .chat-dashboard-grid {
+    grid-template-columns: minmax(170px, 0.8fr) minmax(210px, 1fr) minmax(
+        0,
+        1.5fr
+      );
+  }
+
+  .dash-row-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  body:has(#screen-home),
+  body:has(#screen-chat),
+  body:has(#screen-dashboard) {
+    overflow: auto;
+  }
+
+  #screen-home.active,
+  #screen-chat.active,
+  #screen-dashboard.active {
+    overflow: visible;
+  }
+
+  .home-top-controls {
+    justify-content: stretch;
+    gap: 8px;
+  }
+  .voice-experience-btn,
+  .large-mode-btn {
+    flex: 1 1 0;
+    padding-inline: 12px;
+    font-size: clamp(16px, 4vw, 22px);
+  }
+  .home-service-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+  .service-card {
+    min-height: 220px;
+  }
+
+  .chat-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .chat-col-menu,
+  .chat-col-cards {
+    max-height: 42dvh;
+  }
+  .chat-window,
+  .event-list-window {
+    min-height: 53dvh;
+  }
+
+  .dash-row-3,
+  .dash-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A landscape phone or a short kiosk display needs less fixed decoration. */
+@media (max-height: 700px) and (min-width: 701px) {
+  .home-inner,
+  .chat-dashboard-container,
+  .dashboard-body {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .home-top-controls,
+  .chat-page-header {
+    margin-bottom: 8px;
+  }
+  .service-img {
+    width: clamp(76px, 14vh, 150px);
+    height: clamp(76px, 14vh, 150px);
+  }
+  .service-card .s-desc {
+    display: none;
+  }
+  .quick-card {
+    padding-block: 16px;
+  }
+  .cw-body {
+    padding: 16px;
+    gap: 12px;
+  }
+  .cw-footer {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 12px;
+
+    gap: 12px;
+  }
+
+  .dash-row {
+    min-height: auto;
+    grid-auto-rows: auto;
+  }
+
+  .dashboard-body > .dash-row-2,
+  .dashboard-body > .dash-row-4:last-child {
+    flex: none;
+  }
+
+  .dash-panel {
+    height: auto;
+    min-height: 0;
+  }
+}
+
+/* =========================================================
+   Panel Zoom Modal 반응형
+   PC → 태블릿 → 모바일
+========================================================= */
+
+/* -------------------------
+   태블릿
+   1205px 이하
+------------------------- */
+@media (max-width: 1205px) {
+  .panel-zoom-modal {
+    padding: 20px;
+  }
+
+  .panel-zoom-box {
+    width: 94vw;
+    max-width: 1100px;
+    height: calc(80dvh - 24px);
+    min-height: calc(80dvh - 24px);
+    max-height: calc(80dvh - 24px);
+    padding: 28px;
+    border-radius: 20px;
+  }
+
+  .panel-zoom-close {
+    width: 44px;
+    height: 44px;
+    top: 16px;
+    right: 16px;
+    font-size: 22px;
+  }
+
+  .panel-zoom-content {
+    min-height: 100%;
+  }
+
+  .panel-zoom-content > .dash-panel {
+    min-height: calc(80dvh - 80px);
+    height: auto;
+    padding: 12px;
+  }
+
+  /* 확대 모달 내부 제목 */
+  .panel-zoom-content .panel-label {
+    font-size: 18px;
+    letter-spacing: 1.5px;
+  }
+
+  .panel-zoom-content .panel-title {
+    font-size: 26px;
+    margin-bottom: 22px;
+  }
+
+  /* AI 이용현황 */
+  .panel-zoom-content .ai-dashboard {
+    gap: 25px;
+  }
+
+  .panel-zoom-content .ai-stats {
+    width: 220px;
+    gap: 12px;
+  }
+
+  .panel-zoom-content .ai-stat {
+    min-height: 110px;
+    padding: 18px 14px;
+  }
+
+  .panel-zoom-content .ai-stat span {
+    font-size: 17px;
+  }
+
+  .panel-zoom-content .ai-stat strong {
+    font-size: 30px;
+  }
+
+  .panel-zoom-content .chart-title {
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+
+  .panel-zoom-content .usage-row {
+    grid-template-columns: 130px 1fr 55px;
+    gap: 12px;
+  }
+
+  .panel-zoom-content .usage-label {
+    font-size: 20px;
+  }
+
+  .panel-zoom-content .usage-value {
+    font-size: 19px;
+  }
+
+  .panel-zoom-content .usage-bar {
+    height: 18px;
+  }
+
+  /* 미니 통계 */
+  .panel-zoom-content .mini-stat-grid {
+    gap: 12px;
+  }
+
+  .panel-zoom-content .mini-stat {
+    min-height: 100px;
+    padding: 18px 14px;
+  }
+
+  .panel-zoom-content .mini-stat-label {
+    font-size: 16px;
+  }
+
+  .panel-zoom-content .mini-stat-val {
+    font-size: 30px;
+  }
+
+  /* 데이터 리스트 */
+  .panel-zoom-content .data-list {
+    max-height: 50vh;
+    gap: 10px;
+  }
+
+  .panel-zoom-content .data-item {
+    padding: 14px 16px;
+    min-height: 60px;
+  }
+
+  .panel-zoom-content .item-title {
+    font-size: 17px;
+  }
+
+  .panel-zoom-content .item-desc {
+    font-size: 15px;
+  }
+
+  .panel-zoom-content .item-value {
+    font-size: 17px;
+  }
+
+  /* 좌우 분할 */
+  .panel-zoom-content .panel-content {
+    gap: 20px;
+  }
+
+  .panel-zoom-content .panel-left {
+    width: 220px;
+  }
+
+  /* 막대 차트 */
+  .panel-zoom-content .bar-chart {
+    height: 220px;
+    min-height: 220px;
+    margin-top: 60px;
+  }
+
+  .panel-zoom-content #energyTypeChart {
+    height: 220px;
+  }
+
+  .panel-zoom-content .bar-value {
+    font-size: 15px;
+  }
+
+  .panel-zoom-content .bar-label {
+    font-size: 16px;
+  }
+
+  .panel-zoom-content .chart-guide {
+    font-size: 16px;
+    margin-top: 25px;
+  }
+}
+
+/* -------------------------
+   모바일
+   768px 이하
+------------------------- */
+@media (max-width: 768px) {
+  .panel-zoom-modal {
+    padding: 10px;
+    align-items: center;
+  }
+
+  .panel-zoom-box {
+    width: calc(100vw - 20px);
+    max-width: none;
+
+    height: 94vh;
+
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .panel-zoom-close {
+    width: 38px;
+    height: 38px;
+
+    top: 10px;
+    right: 10px;
+
+    font-size: 19px;
+  }
+
+  .panel-zoom-content > .dash-panel {
+    padding: 6px;
+    min-height: 0;
+  }
+
+  /* 제목 */
+  .panel-zoom-content .panel-label {
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .panel-zoom-content .panel-title {
+    font-size: 21px;
+    margin-bottom: 16px;
+  }
+
+  /* AI 이용현황 */
+  .panel-zoom-content .ai-dashboard {
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 10px;
+  }
+
+  .panel-zoom-content .ai-stats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .panel-zoom-content .ai-stat {
+    min-height: 80px;
+    padding: 12px 8px;
+  }
+
+  .panel-zoom-content .ai-stat span {
+    font-size: 14px;
+  }
+
+  .panel-zoom-content .ai-stat strong {
+    margin-top: 6px;
+    font-size: 24px;
+  }
+
+  .panel-zoom-content .chart-title {
+    font-size: 19px;
+    margin-bottom: 12px;
+  }
+
+  .panel-zoom-content .usage-chart {
+    gap: 10px;
+  }
+
+  .panel-zoom-content .usage-row {
+    grid-template-columns: 80px 1fr 42px;
+    gap: 7px;
+  }
+
+  .panel-zoom-content .usage-label {
+    font-size: 14px;
+  }
+
+  .panel-zoom-content .usage-bar {
+    height: 12px;
+  }
+
+  .panel-zoom-content .usage-value {
+    font-size: 14px;
+  }
+
+  /* 미니 통계 */
+  .panel-zoom-content .mini-stat-grid {
+    gap: 8px;
+  }
+
+  .panel-zoom-content .mini-stat {
+    min-height: 75px;
+    padding: 12px 8px;
+  }
+
+  .panel-zoom-content .mini-stat-label {
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+
+  .panel-zoom-content .mini-stat-val {
+    font-size: 24px;
+  }
+
+  /* 데이터 리스트 */
+  .panel-zoom-content .data-list {
+    max-height: 55vh;
+    gap: 7px;
+    padding: 3px;
+  }
+
+  .panel-zoom-content .data-item {
+    padding: 11px 12px;
+    min-height: 50px;
+    border-radius: 9px;
+  }
+
+  .panel-zoom-content .item-title {
+    font-size: 14px;
+  }
+
+  .panel-zoom-content .item-desc {
+    font-size: 12px;
+  }
+
+  .panel-zoom-content .item-value {
+    font-size: 14px;
+  }
+
+  .panel-zoom-content .item-unit {
+    font-size: 11px;
+  }
+
+  /* 좌우 분할 → 세로 */
+  .panel-zoom-content .panel-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .panel-zoom-content .panel-left {
+    width: 100%;
+  }
+
+  .panel-zoom-content .panel-left .mini-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .panel-zoom-content .panel-right {
+    width: 100%;
+  }
+
+  /* 차트 */
+  .panel-zoom-content .bar-chart {
+    height: 170px;
+    min-height: 170px;
+    margin-top: 50px;
+    gap: 5px;
+  }
+
+  .panel-zoom-content #energyTypeChart {
+    height: 170px;
+  }
+
+  .panel-zoom-content .bar-value {
+    top: -26px;
+    padding: 3px 6px;
+    font-size: 12px;
+  }
+
+  .panel-zoom-content .bar-labels {
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .panel-zoom-content .bar-label {
+    font-size: 12px;
+  }
+
+  .panel-zoom-content .chart-guide {
+    margin-top: 18px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* 지도 */
+  .panel-zoom-content .map-mock {
+    height: 180px;
+  }
+
+  .panel-zoom-content .map-mock.h-180 {
+    height: 160px;
+  }
+}
+
+/* -------------------------
+   작은 모바일
+   480px 이하
+------------------------- */
+@media (max-width: 480px) {
+  .panel-zoom-modal {
+    padding: 6px;
+  }
+
+  .panel-zoom-box {
+    width: calc(100vw - 12px);
+    height: 45vh;
+    min-height: 45vh;
+    max-height: 50vh;
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .panel-zoom-close {
+    width: 34px;
+    height: 34px;
+
+    top: 8px;
+    right: 8px;
+
+    font-size: 17px;
+  }
+
+  .panel-zoom-content > .dash-panel {
+    padding: 4px;
+  }
+
+  .panel-zoom-content .panel-label {
+    font-size: 12px;
+    letter-spacing: 0.7px;
+  }
+
+  .panel-zoom-content .panel-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  /* AI 이용현황 */
+  .panel-zoom-content .ai-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .panel-zoom-content .ai-stat {
+    min-height: 68px;
+    padding: 9px 5px;
+  }
+
+  .panel-zoom-content .ai-stat span {
+    font-size: 12px;
+  }
+
+  .panel-zoom-content .ai-stat strong {
+    font-size: 18px;
+  }
+
+  .panel-zoom-content .chart-title {
+    font-size: 17px;
+  }
+
+  .panel-zoom-content .usage-row {
+    grid-template-columns: 65px 1fr 35px;
+    gap: 5px;
+  }
+
+  .panel-zoom-content .usage-label {
+    font-size: 10px;
+  }
+
+  .panel-zoom-content .usage-bar {
+    height: 10px;
+  }
+
+  .panel-zoom-content .usage-value {
+    font-size: 12px;
+  }
+
+  /* 미니 통계 */
+  .panel-zoom-content .mini-stat {
+    min-height: 65px;
+    padding: 9px 5px;
+  }
+
+  .panel-zoom-content .mini-stat-label {
+    font-size: 11px;
+  }
+
+  .panel-zoom-content .mini-stat-val {
+    font-size: 18px;
+  }
+
+  /* 리스트 */
+  .panel-zoom-content .data-list {
+    max-height: 58vh;
+  }
+
+  .panel-zoom-content .data-item {
+    padding: 9px 10px;
+  }
+
+  .panel-zoom-content .item-title {
+    font-size: 13px;
+  }
+
+  .panel-zoom-content .item-desc {
+    font-size: 11px;
+  }
+
+  .panel-zoom-content .item-value {
+    font-size: 13px;
+  }
+
+  .panel-zoom-content .item-unit {
+    font-size: 10px;
+  }
+
+  /* 차트 */
+  .panel-zoom-content .bar-chart {
+    height: 140px;
+    min-height: 140px;
+    margin-top: 42px;
+  }
+
+  .panel-zoom-content #energyTypeChart {
+    height: 140px;
+  }
+
+  .panel-zoom-content .bar-value {
+    top: -23px;
+    padding: 2px 5px;
+    font-size: 10px;
+  }
+
+  .panel-zoom-content .bar-label {
+    font-size: 10px;
+  }
+
+  .panel-zoom-content .chart-guide {
+    font-size: 11px;
+  }
+
+  /* 지도 */
+  .panel-zoom-content .map-mock {
+    height: 150px;
+  }
+
+  .panel-zoom-content .map-mock.h-180 {
+    height: 140px;
+  }
+}

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 상담 - 스마트시티 시민 서비스</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/common.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/chat.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/fullscreen.css') }}"
+    />
+  </head>
+  <body>
+    {% include 'nav.html' %}
+
+    <div class="voice-modal" id="voiceModal">
+      <div class="voice-inner">
+        <div class="voice-orb">🎙️</div>
+        <div class="voice-title">음성 안내 시작</div>
+        <div class="voice-sub">
+          무엇이든 말씀해 주세요.<br />AI가 즉시 안내해 드립니다.
+        </div>
+        <div class="voice-transcript" id="voiceTranscript">
+          듣고 있습니다...
+        </div>
+        <button class="btn-close-voice" onclick="closeVoice()">닫기</button>
+      </div>
+    </div>
+
+    <div id="screen-chat" class="screen active">
+      <div class="chat-dashboard-container">
+        <div class="chat-page-header">
+          <h2>
+            광주 스마트시티 AI 라운지
+            <span class="subtitle">- 시민 대화형 AI 도우미</span>
+          </h2>
+        </div>
+
+        <div class="chat-dashboard-grid">
+          <div class="chat-col-menu">
+            <div class="col-title">통합 서비스 메뉴</div>
+            <div class="service-menu-list">
+              <div
+                class="svc-card active-svc"
+                onclick="selectService(this, '행정 안내')"
+              >
+                <div class="svc-icon">🏛️</div>
+                <div class="svc-name">행정 안내</div>
+              </div>
+              <div
+                class="svc-card"
+                onclick="selectService(this, '복지 서비스')"
+              >
+                <div class="svc-icon">🤝</div>
+                <div class="svc-name">복지 서비스</div>
+              </div>
+              <div class="svc-card" onclick="selectService(this, '교통 정보')">
+                <div class="svc-icon">🚗</div>
+                <div class="svc-name">교통 정보</div>
+              </div>
+              <div
+                class="svc-card"
+                onclick="selectService(this, '에너지/충전')"
+              >
+                <div class="svc-icon">⚡</div>
+                <div class="svc-name">에너지/충전</div>
+              </div>
+              <div class="svc-card" onclick="selectService(this, '안전 정보')">
+                <div class="svc-icon">🛡️</div>
+                <div class="svc-name">안전 정보</div>
+              </div>
+              <div class="svc-card" onclick="selectService(this, '문화·행사')">
+                <div class="svc-icon">🎉</div>
+                <div class="svc-name">문화·행사</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-col-cards">
+            <div class="col-title" id="leftCardTitle">
+              <strong>행정 안내</strong> 추천 질문
+            </div>
+            <div id="quickCardsContainer" class="quick-cards-wrapper"></div>
+          </div>
+
+          <div class="chat-col-chatbot">
+            <div class="chat-window" id="chatWindowArea">
+              <div class="cw-header">광주 스마트시티 챗봇</div>
+              <div class="cw-body" id="chatMessages">
+                <div class="msg ai">
+                  <div class="msg-avatar">🤖</div>
+                  <div class="msg-bubble">
+                    안녕하세요! 광주 스마트시티 AI 도우미입니다.<br /><br />
+                    왼쪽 메뉴에서 원하시는 분야를 선택하시거나, 궁금하신 점을
+                    자유롭게 말씀해 주세요.
+                  </div>
+                </div>
+              </div>
+              <div class="cw-footer">
+                <button class="btn-voice-large" onclick="openVoice()">
+                  🎙️ 말로 질문하기
+                </button>
+                <div class="cw-input-row">
+                  <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="또는 여기에 입력해주세요..."
+                    onkeydown="
+                      if (event.key === 'Enter' && !event.isComposing)
+                        sendChat();
+                    "
+                  />
+                  <button class="btn-send-chat" onclick="sendChat()">➤</button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="event-list-window"
+              id="eventListArea"
+              style="display: none"
+            >
+              <div class="cw-header">광주 스마트시티 문화·행사 안내</div>
+              <div class="event-grid" id="eventGridContainer"></div>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="today-quiz-button"
+            onclick="openSmartCityQuiz()"
+          >
+            <span class="today-quiz-icon">💡</span>
+
+            <span class="today-quiz-text">
+              <strong>오늘의 퀴즈</strong>
+              <small>스마트시티 퀴즈 풀기</small>
+            </span>
+
+            <span class="today-quiz-arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="map-modal-overlay" id="eventModal">
+      <div class="map-modal-content">
+        <div class="map-modal-header">
+          <h3 id="modalEventTitle">행사 상세 정보</h3>
+          <button class="btn-close-map" onclick="closeEventModal()">✕</button>
+        </div>
+        <div class="map-modal-body">
+          <div id="modalEventImage" class="modal-event-img"></div>
+          <div class="modal-event-info">
+            <p id="modalEventDate"><strong>일시:</strong></p>
+            <p id="modalEventLocation"><strong>장소:</strong></p>
+            <p id="modalEventDesc" class="mt-10"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ⭐ 스마트시티 퀴즈 모달 ==== -->
+    <div
+      class="smart-quiz-modal-overlay"
+      id="smartCityQuizModal"
+      style="display: none"
+    >
+      <div class="smart-quiz-modal" onclick="event.stopPropagation()">
+        <!-- 퀴즈 헤더 -->
+        <div class="smart-quiz-modal-header">
+          <div>
+            <div class="smart-quiz-modal-badge">TODAY'S QUIZ</div>
+
+            <h3>우리 동네 스마트시티 퀴즈</h3>
+          </div>
+
+          <button
+            type="button"
+            class="smart-quiz-close"
+            onclick="closeSmartCityQuiz()"
+            aria-label="퀴즈 닫기"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- 퀴즈 내용 -->
+        <div class="smart-quiz-modal-body">
+          <!-- 문제 번호 -->
+          <div class="smart-quiz-number" id="smartQuizNumber">QUESTION 01</div>
+
+          <!-- 문제 -->
+          <div class="smart-quiz-question" id="smartQuizQuestion"></div>
+
+          <!-- 선택지 -->
+          <div class="smart-quiz-options" id="smartQuizOptions"></div>
+
+          <!-- 결과 -->
+          <div
+            class="smart-quiz-result"
+            id="smartQuizResult"
+            style="display: none"
+          >
+            <div class="smart-quiz-result-icon" id="smartQuizResultIcon"></div>
+
+            <div
+              class="smart-quiz-result-title"
+              id="smartQuizResultTitle"
+            ></div>
+
+            <div
+              class="smart-quiz-result-description"
+              id="smartQuizResultDescription"
+            ></div>
+
+            <button
+              type="button"
+              id="smartQuizDashboardButton"
+              class="smart-quiz-dashboard-btn"
+              onclick="goToQuizService()"
+            >
+              <span id="smartQuizDashboardText">관련 서비스 확인하기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+  </body>
+</html>

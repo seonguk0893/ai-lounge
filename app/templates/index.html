@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>홈 - 스마트시티 시민 서비스 키오스크</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/static/images/icons/icon-192.png"
+    />
+    <link rel="icon" href="/static/images/icons/icon-152.png" />
+
+    <!-- 1. 핵심 LCP 이미지들을 사전 로드(Preload)하여 LCP 1.8초 -> 1.0초 이하로 단축 -->
+    <link
+      rel="preload"
+      as="image"
+      href="{{ url_for('static', filename='images/qr-code.png') }}"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="{{ url_for('static', filename='images/index-icon-1.png') }}"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="{{ url_for('static', filename='images/index-icon-2.png') }}"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="{{ url_for('static', filename='images/index-icon-3.png') }}"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="{{ url_for('static', filename='images/index-icon-4.png') }}"
+    />
+
+    <!-- 2. CSS 다운로드 최적화 (가장 중요한 common/index는 먼저, 나머지는 비동기 권장 혹은 통합) -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/common.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/fullscreen.css') }}"
+    />
+
+    <!-- 3. 서비스 워커 등록 스크립트에 defer 속성 효과를 주거나 초기 로딩 방해 금지 -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("/service-worker.js")
+            .then((reg) => console.log("SW registered:", reg.scope))
+            .catch((err) => console.error("SW registration failed:", err));
+        });
+      }
+    </script>
+  </head>
+
+  <body>
+    {% include 'nav.html' %}
+
+    <div id="screen-home" class="screen active">
+      <div class="home-inner">
+        <div class="home-qr">
+          <img
+            src="{{ url_for('static', filename='images/qr-code.png') }}"
+            alt="서비스 QR코드"
+          />
+
+          <div class="home-qr-text">
+            <strong>스마트폰으로도 이용해보세요</strong>
+            <span>QR코드를 스캔해주세요</span>
+          </div>
+        </div>
+        <div class="home-top-controls">
+          <button
+            class="voice-experience-btn"
+            onclick="location.href = '/voice'"
+          >
+            🎙️ 음성안내 체험하기
+          </button>
+
+          <button
+            class="large-mode-btn"
+            id="largeModeToggle"
+            onclick="toggleLargeMode()"
+          >
+            <span>큰 글씨 모드</span>
+
+            <div class="large-mode-toggle"></div>
+          </button>
+        </div>
+
+        <div class="home-service-grid">
+          <div
+            class="service-card color-1"
+            onclick="location.href = '/chat?service=행정 안내'"
+          >
+            <img
+              src="{{ url_for('static', filename='images/index-icon-1.png') }}"
+              alt="행정 안내"
+              class="service-img"
+            />
+
+            <div class="s-name">AI 라운지 서비스</div>
+
+            <div class="s-desc">
+              광주 행정·복지 정보와 데이터 기반 정보를 한눈에
+            </div>
+          </div>
+
+          <div
+            class="service-card color-2"
+            onclick="location.href = 'https://talktalklab.com'"
+          >
+            <img
+              src="{{ url_for('static', filename='images/index-icon-2.png') }}"
+              alt="나만의 AI 챗봇 만들기"
+              class="service-img"
+            />
+
+            <div class="s-name">나만의 AI 챗봇 만들기</div>
+            <div class="s-desc">나만의 AI 챗봇을 만들어보세요</div>
+          </div>
+
+          <div
+            class="service-card color-3"
+            onclick="location.href = 'https://attagwangju.com'"
+          >
+            <img
+              src="{{ url_for('static', filename='images/index-icon-3.png') }}"
+              alt="아따광주플랫폼"
+              class="service-img"
+            />
+
+            <div class="s-name">아따광주 - 광주관광문화플랫폼</div>
+            <div class="s-desc">광주 지역의 문화와 관광 정보를 제공합니다</div>
+          </div>
+
+          <div class="service-card color-4" onclick="location.href = '/games'">
+            <img
+              src="{{ url_for('static', filename='images/index-icon-4.png') }}"
+              alt="게임 서비스"
+              class="service-img"
+            />
+
+            <div class="s-name">게임 즐겨보기</div>
+
+            <div class="s-desc">
+              틀린그림찾기, 퍼즐 맞추기 게임을 즐겨보세요
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      defer
+      src="{{ url_for('static', filename='js/common.js') }}"
+    ></script>
+  </body>
+</html>

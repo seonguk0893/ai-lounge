@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>틀린 그림 찾기</title>
+    <link rel="icon" href="static/images/favicon.ico" />
+    <link rel="stylesheet" href="static/css/game2.css" />
+  </head>
+  <body>
+    <button
+      class="home-button hidden"
+      id="home-button"
+      onclick="location.href = '/games'"
+    >
+      HOME
+    </button>
+
+    <div id="start-overlay">
+      <div id="start-popup">
+        <h2>🔍 틀린 그림 찾기 게임을 시작할까요?</h2>
+        <p class="instruction">
+          좌우 그림을 비교해서 다른 부분을 찾아보세요!<br />
+          총 레벨 3까지 준비되어 있어요! 제한시간은 60초⏰
+        </p>
+        <button id="start-button">시작하기</button>
+      </div>
+    </div>
+
+    <h1 class="hidden" id="game-title">틀린 그림 찾기</h1>
+    <div id="timer-bar-container" class="hidden">
+      <div id="timer-bar"></div>
+    </div>
+    <div class="game-container hidden" id="game-container">
+      <canvas id="leftImage" width="500" height="500"></canvas>
+      <canvas id="rightImage" width="500" height="500"></canvas>
+    </div>
+    <p id="message"></p>
+
+    <div id="popup" class="popup hidden">
+      <div class="popup-content">
+        <p id="popup-message"></p>
+      </div>
+    </div>
+    <script src="static/js/game2.js"></script>
+  </body>
+</html>

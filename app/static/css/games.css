@@ -1,0 +1,553 @@
+/* =========================================================
+   키즈 콘텐츠
+   반응형 + 대형 키오스크 + 접근성 중심
+   ========================================================= */
+
+/* =========================
+   폰트
+   ========================= */
+
+@font-face {
+  font-family: "MaplestoryOTFBold";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff")
+    format("woff");
+
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* =========================
+   기본
+   ========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+
+  background: #fcf5ea;
+
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: clamp(30px, 4vh, 60px) clamp(20px, 4vw, 60px) 20px;
+}
+
+/* =========================
+   홈 버튼
+   ========================= */
+
+.header button {
+  position: absolute;
+
+  top: clamp(20px, 3vh, 40px);
+  right: clamp(20px, 3vw, 50px);
+
+  min-width: 250px;
+  min-height: 90px;
+
+  padding: 14px 28px;
+
+  background-color: #f4b183;
+
+  border: none;
+  border-radius: 16px;
+
+  font-family: "MaplestoryOTFBold", sans-serif;
+  font-size: clamp(32px, 2.5vw, 42px);
+
+  color: #fff;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
+
+  z-index: 10;
+}
+
+.header button:hover {
+  background-color: #e89d5b;
+
+  transform: scale(1.04);
+}
+
+.header button:focus-visible {
+  outline: 5px solid #000;
+  outline-offset: 4px;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content-wrapper {
+  width: min(2000px, calc(100% - 80px));
+
+  flex: 1;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: clamp(30px, 4vw, 70px);
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px 0 clamp(40px, 6vh, 80px);
+}
+
+/* =========================================================
+   GAME CARD
+   ========================================================= */
+
+.card {
+  width: 100%;
+
+  /*
+    화면 크기에 따라서 카드가 커짐
+  */
+  min-height: clamp(480px, 55vh, 760px);
+
+  background-color: #f8e1c7;
+
+  border-radius: clamp(24px, 2.5vw, 45px);
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: clamp(25px, 3vw, 50px);
+
+  cursor: pointer;
+
+  text-align: center;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  user-select: none;
+
+  /*
+    키오스크 터치 UX
+  */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 퍼즐 카드 */
+
+#puzzle-card {
+  background-color: #f7dfbe;
+}
+
+/* hover */
+
+.card:hover {
+  transform: translateY(-8px) scale(1.015);
+
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+}
+
+/* 클릭 */
+
+.card:active {
+  transform: scale(0.98);
+}
+
+/* 키보드 접근성 */
+
+.card:focus-visible {
+  outline: 6px solid #168f68;
+
+  outline-offset: 6px;
+}
+
+/* =========================================================
+   GAME IMAGE
+   ========================================================= */
+
+.card img {
+  display: block;
+
+  width: clamp(300px, 30vw, 620px);
+
+  height: clamp(300px, 30vw, 620px);
+
+  object-fit: contain;
+
+  margin-bottom: clamp(25px, 3vh, 45px);
+}
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.card-title {
+  font-family: "MaplestoryOTFBold", sans-serif;
+
+  font-size: clamp(34px, 3vw, 64px);
+
+  font-weight: bold;
+
+  line-height: 1.25;
+
+  color: #333;
+
+  word-break: keep-all;
+}
+
+/* =========================================================
+   1400px 이하
+   일반 PC / 중형 키오스크
+   ========================================================= */
+
+@media (max-width: 1400px) {
+  .header button {
+    min-width: 150px;
+    min-height: 70px;
+  }
+
+  .content-wrapper {
+    width: calc(100% - 60px);
+
+    gap: 35px;
+  }
+
+  .card {
+    min-height: 500px;
+
+    padding: 30px;
+  }
+
+  .card img {
+    width: min(32vw, 380px);
+
+    height: min(32vw, 380px);
+  }
+
+  .card-title {
+    font-size: clamp(34px, 3vw, 52px);
+  }
+}
+
+/* =========================================================
+   1100px 이하
+   태블릿 가로 / 작은 PC
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .header {
+    padding-top: 30px;
+  }
+
+  .header h1 img {
+    height: 190px;
+  }
+
+  .header button {
+    min-width: 130px;
+    min-height: 56px;
+
+    padding: 12px 20px;
+
+    font-size: 20px;
+  }
+
+  .content-wrapper {
+    width: calc(100% - 40px);
+
+    gap: 24px;
+
+    padding-bottom: 40px;
+  }
+
+  .card {
+    min-height: 430px;
+
+    padding: 25px;
+  }
+
+  .card img {
+    width: min(30vw, 320px);
+
+    height: min(30vw, 320px);
+
+    margin-bottom: 22px;
+  }
+
+  .card-title {
+    font-size: 36px;
+  }
+}
+
+/* =========================================================
+   768px 이하
+   태블릿 세로
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .header {
+    padding: 25px 20px 10px;
+  }
+
+  .header h1 img {
+    height: 150px;
+
+    max-width: 65vw;
+  }
+
+  .header button {
+    top: 15px;
+    right: 15px;
+
+    min-width: 110px;
+    min-height: 50px;
+
+    padding: 10px 16px;
+
+    border-radius: 12px;
+
+    font-size: 17px;
+  }
+
+  .content-wrapper {
+    width: calc(100% - 30px);
+
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+
+    padding: 10px 0 30px;
+  }
+
+  .card {
+    min-height: 350px;
+
+    border-radius: 24px;
+
+    padding: 25px;
+  }
+
+  .card img {
+    width: min(55vw, 280px);
+
+    height: min(55vw, 280px);
+
+    margin-bottom: 18px;
+  }
+
+  .card-title {
+    font-size: 32px;
+  }
+}
+
+/* =========================================================
+   600px 이하
+   모바일
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .header {
+    padding: 20px 15px 8px;
+  }
+
+  .header h1 img {
+    height: 120px;
+
+    max-width: 60vw;
+  }
+
+  .header button {
+    top: 10px;
+    right: 10px;
+
+    min-width: 95px;
+    min-height: 46px;
+
+    padding: 8px 12px;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+  }
+
+  .content-wrapper {
+    width: calc(100% - 20px);
+
+    gap: 14px;
+
+    padding: 8px 0 20px;
+  }
+
+  .card {
+    min-height: 300px;
+
+    padding: 20px;
+
+    border-radius: 20px;
+  }
+
+  .card img {
+    width: min(60vw, 230px);
+
+    height: min(60vw, 230px);
+
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-size: 28px;
+  }
+}
+
+/* =========================================================
+   400px 이하
+   작은 모바일
+   ========================================================= */
+
+@media (max-width: 400px) {
+  .header {
+    padding-top: 15px;
+  }
+
+  .header h1 img {
+    height: 95px;
+  }
+
+  .header button {
+    min-width: 82px;
+    min-height: 42px;
+
+    padding: 7px 10px;
+
+    font-size: 13px;
+  }
+
+  .content-wrapper {
+    width: calc(100% - 16px);
+
+    gap: 12px;
+  }
+
+  .card {
+    min-height: 260px;
+
+    padding: 16px;
+
+    border-radius: 18px;
+  }
+
+  .card img {
+    width: 190px;
+    height: 190px;
+
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-size: 24px;
+  }
+}
+
+/* =========================================================
+   가로형 모바일
+   ========================================================= */
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .header {
+    padding: 12px 20px 5px;
+  }
+
+  .header h1 img {
+    height: 90px;
+  }
+
+  .header button {
+    top: 10px;
+    right: 15px;
+
+    min-height: 42px;
+
+    font-size: 14px;
+  }
+
+  .content-wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    width: calc(100% - 30px);
+
+    gap: 15px;
+
+    padding-bottom: 20px;
+  }
+
+  .card {
+    min-height: 280px;
+
+    padding: 15px;
+  }
+
+  .card img {
+    width: min(28vw, 200px);
+
+    height: min(28vw, 200px);
+
+    margin-bottom: 10px;
+  }
+
+  .card-title {
+    font-size: 25px;
+  }
+}
+
+/* =========================================================
+   움직임 최소화
+   접근성
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .header button {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
